@@ -1,7 +1,8 @@
 import styled, { createGlobalStyle } from 'styled-components';
-import { ActiveIcon, Container, Header, IconButtonGear, Overlay, SideBar } from './stylesGlobal';
+import { ActiveIcon, Container, Header, IconButtonGear, MainContent, Overlay, SideBar } from './stylesGlobal';
 import { LoginContainer } from './loginStyles';
 import { NavBar, NavTitle } from './navStyles';
+import { ContainerFilters } from './manageClassesStyles';
 
 export const GlobalStyle = createGlobalStyle`
   * {
@@ -9,6 +10,37 @@ export const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
     font-family: 'Inter', sans-serif; 
+
+    ::-webkit-scrollbar {
+        width: 6px; 
+        height: 4px; 
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: ${({ theme }) => theme.colors.background}; 
+        border-radius: 6px; 
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: ${({ theme }) => theme.colors.primary};
+        border-radius: 8px; 
+        border: 2px solid ${({ theme }) => theme.colors.background}; 
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: ${({ theme }) => theme.colors.secondary};
+    }
+
+
+    ::-webkit-scrollbar-horizontal {
+        height: 6px; 
+    }
+
+    ::-webkit-scrollbar-thumb:horizontal {
+        background-color: ${({ theme }) => theme.colors.primary};
+        border-radius: 4px;
+    }
+
   }
 
   body {
@@ -77,6 +109,14 @@ export const GlobalStyle = createGlobalStyle`
         padding: .5rem;
     }
   }
+        
+    ${MainContent} {
+          margin-left: 120px;
+    }
+
+    ${ContainerFilters} {
+        padding: 0px;
+    }
 
   @media (max-width: 768px) {
     ${NavBar} {
@@ -118,7 +158,12 @@ export const GlobalStyle = createGlobalStyle`
           }
         }
       }
+
+      ${MainContent} {
+        margin-left: 0px;
+      }
     }
+    
   }
 
   @media (max-width: 480px) {

@@ -1,62 +1,50 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
-import { Class } from "../services/types";
+import { Class, Enrollments } from "../services/types";
+import { useApi } from "../hooks/useApi";
 
 interface ClassContextType {
   classState: Class[];
+  enrollments: Enrollments[];
 }
 
-const mockClasses = [
+export const mockClasses = [
   {
-    id: 1,
-    title: "Introdução ao React",
-    description: "Aprenda os fundamentos do React e como criar componentes reutilizáveis.",
+    id: '1',
+    title: "Skelleton Mock",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut quis odio eget magna lacinia lacinia.",
     scheduled_at: "2024-03-10T14:00:00Z",
-    instructor_id: 101,
+    instructor_id: 'Iago Jesus',
+    instructor_name: 'Iago Jesus',
   },
-  {
-    id: 3,
-    title: "Introdução ao React",
-    description: "Aprenda os fundamentos do React e como criar componentes reutilizáveis.",
-    scheduled_at: "2024-03-10T14:00:00Z",
-    instructor_id: 101,
-  },  {
-    id: 4,
-    title: "Introdução ao React",
-    description: "Aprenda os fundamentos do React e como criar componentes reutilizáveis.",
-    scheduled_at: "2024-03-10T14:00:00Z",
-    instructor_id: 101,
-  },
-  {
-    id: 2,
-    title: "JavaScript Moderno",
-    description: "Explorando as novas funcionalidades do JavaScript ES6+.",
-    scheduled_at: "2024-03-15T16:00:00Z",
-    instructor_id: 102,
-  }
 ];
 
 
 export const ClassContext = createContext<ClassContextType | undefined>(undefined);
 
 export const ClassProvider = ({ children }: { children: ReactNode }) => {
-  const [classState, setClassState] = useState<Class[]>([]);
-
+  const [classState, setClassState] = useState<Class[]>(mockClasses || []);
+  const [enrollments, setEnrollments] = useState<Enrollments[]>([]);
+  const user_id_cache = "b1ce5c89-4da0-4a19-8450-2b2df245ff42";
+  const { getAll, getByParams } = useApi();
 
   useEffect(() => {
-    const fetchClass = async () => {
-      try {
-        const response = await fetch("https://api.exemplo.com/aulas"); 
-        if (!response.ok) throw new Error("API Indisponível");
-        const data = await response.json();
-        setClassState(data);
-      } catch (error) {
-        console.warn("Usando dados mockados: ", error);
-        setClassState(mockClasses); 
-      }
+    const fetchClasses = async () => {
+      const classes = await getAll("classes");
+      setClassState(classes);
     };
 
-    fetchClass();
+    fetchClasses();
   }, []);
 
-  return <ClassContext.Provider value={{ classState }}>{children}</ClassContext.Provider>;
+  useEffect(() => {
+    const fetchEnrollments = async () => {
+      const enrolledClasses = await getByParams("enrollments", { student: user_id_cache });
+      setEnrollments(enrolledClasses);
+    };
+
+    fetchEnrollments();
+  }, []);
+
+
+  return <ClassContext.Provider value={{ classState, enrollments }}>{children}</ClassContext.Provider>;
 };

@@ -22,6 +22,7 @@ export const Header = styled.span`
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 1rem;
 
     img {
         width: 200px;
@@ -61,6 +62,18 @@ export const InputGroup = styled.div`
   }
 `;
 
+export const InputGroupModal = styled(InputGroup)`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  
+  input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+`;
+
 export const Button = styled.button`
   width: 100%;
   padding: ${({ theme }) => theme.spacing.sm};
@@ -70,15 +83,27 @@ export const Button = styled.button`
   cursor: ${({ disabled }) => disabled ? 'not-allowed' : 'pointer'};
   font-weight: 700;
 
-  border: none;
+  border: 1px solid transparent;
   border-radius: ${({ theme }) => theme.borderRadius};
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: ${({ theme, disabled }) => disabled ? theme.colors.subtext : theme.colors.success};
+    background-color: ${({ theme, disabled }) => disabled ? theme.colors.subtext : 'transparent'};
+    color: ${({ theme }) => theme.colors.success};
+    border: 1px solid ${({ theme }) => theme.colors.success};
 
   }
 `;
+
+export const ButtonCancel = styled(Button)`
+  background-color: ${({ theme, disabled }) => disabled ? theme.colors.subtext : theme.colors.danger};
+
+  &:hover {
+    background-color: ${({ theme, disabled }) => disabled ? theme.colors.subtext : 'transparent'};
+    color: ${({ theme }) => theme.colors.subtext};
+    border: 1px solid ${({ theme }) => theme.colors.subtext};
+  }
+`
 
 export const SpanError = styled.span`
   color: ${({ theme }) => theme.colors.danger};
@@ -109,13 +134,17 @@ export const Container = styled.div`
 `;
 
 export const SideBar = styled.div`
-  height: 100vh;
+  min-height: 100vh;
   width: 160px;
   padding: 1rem;
   display: flex;
   flex-direction: column;
   background-color: ${({ theme }) => theme.colors.background};
   box-shadow: 1px 1px 10px 1px rgba(45, 156, 219, .3);
+  position: fixed; /* Fixa a sidebar na tela */
+  top: 0;
+  left: 0;
+  bottom: 0; /* Faz a sidebar acompanhar o conteúdo */
 
   aside {
     display: flex;
@@ -202,6 +231,7 @@ export const ProfileIcon = styled.div`
 
 export const MainContent = styled.div`
   flex-grow: 1;
+  margin-left: 160px;
   display: flex;
   flex-direction: column;
 `;
@@ -255,4 +285,36 @@ export const HeaderPage = styled.div`
   gap: 1rem;
   padding: ${({ theme }) => theme.spacing.md};
   /* margin-bottom: ${({ theme }) => theme.spacing.md}; */
+`;
+
+export const ModalOverlay = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+export const ModalContent = styled.div`
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    gap: 1rem;
+    background-color: ${({ theme }) => theme.colors.white};
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 300px;
+
+    span {
+        display: flex;
+        gap: 1rem;
+    }
 `;
