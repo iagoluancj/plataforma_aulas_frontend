@@ -6,7 +6,7 @@ import { ClassProvider } from './store/classesContext';
 import { AuthProvider } from './store/authContext';
 import AppRoutes from './routes/appRoutes';
 import ToastProvider from './services/toastProvider';
-
+//
 function App() {
   return (
     <ThemeProvider theme={theme}>
