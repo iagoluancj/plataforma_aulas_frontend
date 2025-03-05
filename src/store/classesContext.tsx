@@ -1,12 +1,10 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
-import { Class, Enrollments } from "../services/types";
+import { Class, ClassContextType, Enrollments } from "../services/types";
 import { useApi } from "../hooks/useApi";
 
-interface ClassContextType {
-  classState: Class[];
-  enrollments: Enrollments[];
-}
 
+
+// Skelleton/mock utilizado para testes e permanecerá para possiveis falhas onde o class não seja renderizado.
 export const mockClasses = [
   {
     id: '1',
@@ -19,12 +17,18 @@ export const mockClasses = [
 ];
 
 
+// Responsável por fornecer as classes e enrollments assim que são consultadas 
+// no início da aplicação no cliente.
 export const ClassContext = createContext<ClassContextType | undefined>(undefined);
 
 export const ClassProvider = ({ children }: { children: ReactNode }) => {
   const [classState, setClassState] = useState<Class[]>(mockClasses || []);
   const [enrollments, setEnrollments] = useState<Enrollments[]>([]);
-  const user_id_cache = "b1ce5c89-4da0-4a19-8450-2b2df245ff42";
+
+  const storedUser = sessionStorage.getItem("userData");
+  const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+  const user_id_cache = parsedUser?.id || '';
+
   const { getAll, getByParams } = useApi();
 
   useEffect(() => {
@@ -46,5 +50,5 @@ export const ClassProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
 
-  return <ClassContext.Provider value={{ classState, enrollments }}>{children}</ClassContext.Provider>;
+  return <ClassContext.Provider value={{ classState, enrollments }}> {children} </ClassContext.Provider>;
 };

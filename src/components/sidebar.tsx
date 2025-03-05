@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ActiveIcon, Header, IconList, IconWrapper, Overlay, ProfileIcon, SideBar, SpanIcon } from '../styles/stylesGlobal';
 import { MdDashboard, } from 'react-icons/md';
@@ -20,7 +20,12 @@ const Sidebar = ({ isOpen, toggleSidebar }: SideBarProps) => {
   const CgProfileIcon = CgProfile as React.ElementType;
 
   const location = useLocation();
+  const [userRole, setUserRole] = useState<string | null>(null);
 
+  const storedUser = sessionStorage.getItem("userData");
+  const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+
+  // Renderiza o icone na div "Ativo" de acordo com o path name atual
   const getActiveIcon = () => {
     switch (location.pathname) {
       case "/dashboard":
@@ -38,6 +43,16 @@ const Sidebar = ({ isOpen, toggleSidebar }: SideBarProps) => {
     }
   };
 
+
+  // Para ficar coeso com os acessos, os icones aparecem de acordo com a role.
+  useEffect(() => {
+    const storedRole = sessionStorage.getItem("userData");
+    if (storedRole) {
+      const parsedData = JSON.parse(storedRole);
+      setUserRole(parsedData.role);
+    }
+  }, []);
+
   return (
     <>
       <Overlay isOpen={isOpen} onClick={toggleSidebar} />
@@ -52,40 +67,53 @@ const Sidebar = ({ isOpen, toggleSidebar }: SideBarProps) => {
           </ActiveIcon>
 
           <IconList>
-            {
-              location.pathname !== "/dashboard" && (
-                <IconWrapper>
-                  <Link to="/dashboard">
-                    <span>Dashboard</span>
-                    <MdDashboardIcon />
-                  </Link>
-                </IconWrapper>
-              )
-            }
+            {userRole === "admin" && (
+              <>
+                {
+                  location.pathname !== "/dashboard" && (
+                    <IconWrapper>
+                      <Link to="/dashboard">
+                        <span>Dashboard</span>
+                        <MdDashboardIcon />
+                      </Link>
+                    </IconWrapper>
+                  )
+                }
 
-            {location.pathname !== "/manage-classes" && (
-              <IconWrapper>
-                <Link to="/manage-classes">
-                  <span>Gerenciar aulas</span>
-                  <GrUserManagerIcon />
-                </Link>
-              </IconWrapper>
+                {location.pathname !== "/manage-classes" && (
+                  <IconWrapper>
+                    <Link to="/manage-classes">
+                      <span>Gerenciar aulas</span>
+                      <GrUserManagerIcon />
+                    </Link>
+                  </IconWrapper>
+                )}
+              </>
             )}
 
-            {location.pathname !== "/available-classes" && (
-              <IconWrapper>
-                <Link to="/available-classes">
-                  <span>Aulas disponiveis</span>
-                  <CiBoxListIcon />
-                </Link>
-              </IconWrapper>
+            {userRole === "student" && (
+              <>
+                {location.pathname !== "/available-classes" && (
+                  <IconWrapper>
+                    <Link to="/available-classes">
+                      <span>Aulas disponíveis</span>
+                      <CiBoxListIcon />
+                    </Link>
+                  </IconWrapper>
+                )}
+              </>
             )}
           </IconList>
 
 
           <ProfileIcon>
             <Link to="/profile">
-              <CgProfileIcon />
+              {parsedUser && parsedUser.profile_picture ? (
+                <img src={`http://127.0.0.1:8000${parsedUser.profile_picture}`} alt="Profile" />
+              ) : (
+                <CgProfileIcon />
+              )}
+
             </Link>
           </ProfileIcon>
 

@@ -1,26 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useContext } from "react";
+import { AuthContext } from "../store/authContext";
 
+// Hook para aplicar useAuth a partir do contexto nas paginas/componentes
 const useAuth = () => {
-  const [auth, setAuth] = useState<boolean>(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      setAuth(true);
-    }
-  }, []);
-
-  const login = (token: string) => {
-    localStorage.setItem('authToken', token);
-    setAuth(true);
-  };
-
-  const logout = () => {
-    localStorage.removeItem('authToken');
-    setAuth(false);
-  };
-
-  return { auth, login, logout };
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth deve ser usado dentro de um AuthProvider");
+  }
+  return context;
 };
 
 export default useAuth;

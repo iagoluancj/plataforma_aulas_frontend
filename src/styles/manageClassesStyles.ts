@@ -86,7 +86,7 @@ export const ClassHeader = styled.div`
   width: 100%;
   
   h4 {
-        width: 290px;
+        max-width: 270px;
         max-height: 1.2rem;
         word-wrap: break-word; 
         overflow-wrap: break-word; 
@@ -129,6 +129,23 @@ export const ClassFooter = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-top: 10px;
+  gap: 1rem;
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: .2rem;
+    font-size: 14px;
+
+  }
+
+  p {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    gap: .2rem;
+  }
+
   img {
     width: 50px;
     height: 50px;

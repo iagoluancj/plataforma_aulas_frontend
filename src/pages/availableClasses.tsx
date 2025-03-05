@@ -1,16 +1,16 @@
 import { useContext, useEffect, useState } from "react";
 import { ClassContext, mockClasses } from "../store/classesContext";
-import { AvailableClassesContainer, AvailableClassCard, AvailableClassHeader, AvailableClassList, AvailableClassWrapper, AvailableClassDescription, AvailableClassFooter, SubscribeButton } from "../styles/availableClassesStyles";
+import { AvailableClassesContainer, AvailableClassCard, AvailableClassHeader, AvailableClassList, AvailableClassWrapper, AvailableClassDescription, AvailableClassFooter, SubscribeButton, AvailableClassInstructor } from "../styles/availableClassesStyles";
 import { Header, HeaderPage, MainContent, PageContent } from "../styles/stylesGlobal";
 import Sidebar from "../components/sidebar";
 import Nav from "../components/nav";
 import cardimg from '../assets/card-class.png'
-import cardimg2 from '../assets/card-class2.png'
 import { GrUserManager } from "react-icons/gr";
 import { MdOutlineDateRange } from "react-icons/md";
 import { Class, Enrollments } from "../services/types";
 import { useApi } from "../hooks/useApi";
 import { ContainerFilters, Filters } from "../styles/manageClassesStyles";
+import { toast } from "react-toastify";
 
 
 const AvailableClasses = () => {
@@ -21,6 +21,10 @@ const AvailableClasses = () => {
     const [classes, setClasses] = useState<Class[]>(mockClasses || []);
     const [enrollments, setEnrollments] = useState<Enrollments[]>([]);
 
+    const storedUser = sessionStorage.getItem("userData");
+    const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+    const studentId = parsedUser?.id || '';
+
     const context = useContext(ClassContext);
     const { create, remove } = useApi()
 
@@ -28,22 +32,23 @@ const AvailableClasses = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
 
-    const studentId = "b1ce5c89-4da0-4a19-8450-2b2df245ff42";
-
-    // 🔹 Função para inscrever o estudante na aula
+    // Função para inscrever o estudante na aula
     const handleSubscribe = async (classId: string) => {
         try {
             const newEnrollment = { student: studentId, classes: classId };
             const response = await create("enrollments", newEnrollment);
 
             if (response) {
+                toast.success("Inscrição feita com sucesso.");
                 setEnrollments([...enrollments, response]);
             }
         } catch (error) {
+            toast.info("Erro ao inscrever-se.");
             console.error("Erro ao inscrever-se:", error);
         }
     };
 
+    // Função para retirar a inscrição do estudante na aula
     const handleUnsubscribe = async (classId: string) => {
         const enrollmentToDelete = enrollments.find(enrollment => enrollment.classes === classId);
         if (!enrollmentToDelete) return;
@@ -51,7 +56,9 @@ const AvailableClasses = () => {
         try {
             await remove("enrollments", enrollmentToDelete.id);
             setEnrollments((prev) => prev.filter(enrollment => enrollment.id !== enrollmentToDelete.id));
+            toast.info("Inscrição cancelada com sucesso.");
         } catch (error) {
+            toast.error("Erro ao cancelar inscrição.");
             console.error("Erro ao cancelar inscrição:", error);
         }
     };
@@ -111,29 +118,22 @@ const AvailableClasses = () => {
                                             </div>
                                         </AvailableClassHeader>
                                         <AvailableClassFooter>
-                                            <span><GrUserManagerIcon />{aula.instructor_name}</span>
-                                            <span><MdOutlineDateRangeIcon /> {new Date(aula.scheduled_at).toLocaleDateString()}</span>
+                                            <span><GrUserManagerIcon /><AvailableClassInstructor>{aula.instructor_name}</AvailableClassInstructor></span>
+                                            <span><MdOutlineDateRangeIcon />
+                                                {new Date(new Date(aula.scheduled_at).getTime() + 3 * 60 * 60 * 1000).toLocaleString('pt-BR', {
+                                                    year: 'numeric',
+                                                    month: 'numeric',
+                                                    day: 'numeric',
+                                                    hour: '2-digit',
+                                                    minute: '2-digit',
+                                                })}
+                                            </span>
                                         </AvailableClassFooter>
                                     </AvailableClassCard>
                                 ))
                             ) : (
                                 <p>Sem aulas disponiveis...</p>
                             )}
-                            <AvailableClassCard >
-                                <AvailableClassHeader>
-                                    <AvailableClassWrapper>
-                                        <h3>aula.title</h3>
-                                        <AvailableClassDescription>aula.description</AvailableClassDescription>
-                                    </AvailableClassWrapper>
-                                    <div>
-                                        <img src={cardimg} alt="" />
-                                    </div>
-                                </AvailableClassHeader>
-                                <AvailableClassFooter>
-                                    <span><GrUserManagerIcon /> aula.instructor_id</span>
-                                    <span><MdOutlineDateRangeIcon />aula.schedu</span>
-                                </AvailableClassFooter>
-                            </AvailableClassCard>
                         </AvailableClassList>
                     </div>
                 </PageContent>

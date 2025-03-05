@@ -104,3 +104,11 @@ export const AvailableClassFooter = styled.footer`
     gap: 5px;
   }
 `;
+
+
+export const AvailableClassInstructor = styled.span`
+   max-width: 100px;
+   white-space: nowrap; 
+   overflow: hidden;
+
+`;

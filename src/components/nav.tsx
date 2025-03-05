@@ -1,21 +1,26 @@
 import React from 'react';
 import { NavActions, NavBar, NavTitle, SearchContainer, SearchInput } from '../styles/navStyles';
 import { IconButton, IconButtonGear, Title } from '../styles/stylesGlobal';
-import { TbSearch, TbBell } from 'react-icons/tb';
+import { TbSearch } from 'react-icons/tb';
+import { FiLogOut } from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
 import { FaGear } from "react-icons/fa6";
+import useAuth from '../hooks/useAuth';
+import { NavProps } from '../services/types';
 
-interface NavProps {
-  title: string;
-  isOpen: boolean;
-  toggleSidebar: () => void;
-}
 
 const Nav = ({ title, toggleSidebar, isOpen }: NavProps) => {
   const FaGearIcon = FaGear as React.ElementType;
   const TbFlagSearchIcon = TbSearch as React.ElementType;
-  const TbBellIcon = TbBell as React.ElementType;
+  const FiLogOutIcon = FiLogOut as React.ElementType;
   const IoCloseIcon = IoClose as React.ElementType;
+
+  const { logout } = useAuth()
+
+  const handleLogout = () => {
+    logout(); 
+
+};
 
   return (
     <NavBar>
@@ -26,8 +31,8 @@ const Nav = ({ title, toggleSidebar, isOpen }: NavProps) => {
           {/* Aqui será um link com a pagina 'aulas disponiveis, onde ao pesquisar, levará o usuario até a pagina e mostrará de acordo com sua pesquisa' */}
           <TbFlagSearchIcon />
         </SearchContainer>
-        <IconButton>
-          <TbBellIcon />
+        <IconButton onClick={(() => handleLogout())}>
+          <FiLogOutIcon />
         </IconButton>
         <IconButtonGear onClick={toggleSidebar}>
           {isOpen ? <IoCloseIcon /> : <FaGearIcon />}

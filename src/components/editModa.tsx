@@ -3,7 +3,9 @@ import styled from 'styled-components';
 import { useApi } from '../hooks/useApi';
 import { Button, ButtonCancel, InputGroupModal, ModalContent, ModalOverlay } from '../styles/stylesGlobal';
 import { EditClassModalProps } from '../services/types';
+import { toast } from 'react-toastify';
 
+// Modal para edição das aulas
 const EditClassModal = ({ classData, onClose, onSave }: EditClassModalProps) => {
     const { update } = useApi();
 
@@ -22,13 +24,17 @@ const EditClassModal = ({ classData, onClose, onSave }: EditClassModalProps) => 
     const handleSubmit = async () => {
         const sanitizedFormData = {
             ...formData,
-            id: formData.id.replace(/-/g, ''), 
+            id: formData.id.replace(/-/g, ""),
         };
-        const updatedClass = await update('/classes', sanitizedFormData.id, sanitizedFormData);
-        console.log(formData);
+
+        const updatedClass = await update("/classes", sanitizedFormData.id, sanitizedFormData);
+
         if (updatedClass) {
+            toast.info("Aula alterada com sucesso.");
             onSave(updatedClass);
             onClose();
+        } else {
+            toast.error("Falha ao editar a aula.");
         }
     };
 

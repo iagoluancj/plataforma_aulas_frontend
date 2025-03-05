@@ -4,6 +4,9 @@ import { LoginContainer } from './loginStyles';
 import { NavBar, NavTitle } from './navStyles';
 import { ContainerFilters } from './manageClassesStyles';
 
+// Configurações globais:
+// Essas configurações apenas definem o ambiente geral do sistema 
+// e não são utilizadas ativamente no código.
 export const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;

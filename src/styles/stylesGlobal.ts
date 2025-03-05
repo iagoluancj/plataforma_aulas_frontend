@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+// Estilos globais:
+// Estes estilos são utilizados ativamente em diversos componentes da aplicação.
 interface OverlayProps {
   isOpen: boolean;
 }
@@ -34,7 +36,7 @@ export const InputGroup = styled.div`
   position: relative;
   margin-bottom: ${({ theme }) => theme.spacing.sm};
 
-  input {
+  input, select {
     width: 100%;
     padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
     padding-left: ${({ theme }) => theme.spacing.xs};
@@ -137,6 +139,7 @@ export const SideBar = styled.div`
   min-height: 100vh;
   width: 160px;
   padding: 1rem;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   background-color: ${({ theme }) => theme.colors.background};
@@ -227,6 +230,18 @@ export const ProfileIcon = styled.div`
     padding-top: 1rem;
     font-size: 2rem;
     color: ${({ theme }) => theme.colors.white};
+
+    img {
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      object-fit: cover;
+
+      box-shadow: 1px 1px 10px 1px rgba(999, 999, 999, .5);
+      border-left: 1px solid ${({ theme }) => theme.colors.white};
+      border-right: 1px solid ${({ theme }) => theme.colors.white};
+      border-bottom: 1px solid ${({ theme }) => theme.colors.white};
+    }
 `;
 
 export const MainContent = styled.div`

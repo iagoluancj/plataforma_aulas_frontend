@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Header } from "./stylesGlobal";
+import { Button, Header } from "./stylesGlobal";
 
 export const ProfileContainer = styled.div`
     display: flex;
@@ -26,6 +26,14 @@ export const ProfileWrapper = styled.div`
     }
 `;
 
+export const ButtonProfile = styled(Button)`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+
+`;
+
 export const ProfileHeader = styled(Header)`
     display: flex;
     justify-content: space-between;
@@ -33,13 +41,14 @@ export const ProfileHeader = styled(Header)`
     gap: 1rem;
     margin-bottom:  ${({ theme }) => theme.spacing.md};
 
-    button {
+    label {
         background-color: ${({ theme }) => theme.colors.background};
         color: ${({ theme }) => theme.colors.white};
         padding: .5rem;
         border-radius: 8px;
         display: flex;
         align-items: center;
+        cursor: pointer;
         gap: .5rem;
     }
 `;

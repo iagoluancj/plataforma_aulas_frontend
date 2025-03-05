@@ -14,6 +14,9 @@ import CreateClassModal from '../components/createModal';
 
 
 const ManageClasses = () => {
+    // Ícones:  
+    // Foi necessário importar e utilizar os ícones dessa forma,  
+    // pois nesta versão do React, o uso direto de 'GrSave' gera falhas.
     const FaPlusIcon = FaPlus as React.ElementType;
     const FaTrashIcon = FaTrash as React.ElementType;
     const CgEditFadeIcon = CgEditFade as React.ElementType;
@@ -30,8 +33,11 @@ const ManageClasses = () => {
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [classFiltered, setClassFiltered] = useState<Class[]>(mockClasses || []);
-    const instructor_id_cache = "11cbec86-1512-4579-91ba-1d47e3f57fd2";
     const context = useContext(ClassContext);
+
+    const storedUser = sessionStorage.getItem("userData");
+    const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+    const instructor_id_cache = parsedUser?.id || '';
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
@@ -63,7 +69,7 @@ const ManageClasses = () => {
     };
 
     const handleDelete = (deletedId: string) => {
-        setClassFiltered(classFiltered.filter((c: Class) => c.id !== deletedId)); 
+        setClassFiltered(classFiltered.filter((c: Class) => c.id !== deletedId));
     };
 
 
@@ -79,7 +85,8 @@ const ManageClasses = () => {
         setClassFiltered([...classFiltered, newClass]);
     };
 
-
+    // Foi necessário utilizar o operador '?' em classState  
+    // para evitar erros caso o contexto ainda não tenha sido carregado.
     useEffect(() => {
         if (context?.classState?.length) {
             const filteredClasses = context.classState.filter((classItem: Class) =>
@@ -88,26 +95,6 @@ const ManageClasses = () => {
             setClassFiltered(filteredClasses);
         }
     }, [context?.classState]);
-
-    const testeMobile = [
-        {
-            "id": "3d0dcfdc-bffb-4def-b0f5-3db18e18cc54",
-            "title": "Biologia Celular",
-            "description": "Fundamentos da biologia celular e suas aplicações",
-            "scheduled_at": "2025-03-19T09:00:00Z",
-            "instructor_id": "2d1f331c-f3f3-4955-954b-1c86eb7c0998",
-            "instructor_name": "Iago Jesus",
-        },
-        {
-            "id": "8ed6f869-ab4d-417b-90c5-b063e966c84b",
-            "title": "dasdas",
-            "description": "asdasdasd",
-            "scheduled_at": "2025-03-06T00:00:00Z",
-            "instructor_name": "Iago Jesus",
-            "instructor_id": "11cbec86-1512-4579-91ba-1d47e3f57fd2"
-        }
-    ]
-
 
     if (!context) return <p>Erro ao carregar as aulas.</p>;
 
@@ -147,7 +134,15 @@ const ManageClasses = () => {
                                             <h4>Matéria: {aula.title}</h4>
                                             <p>{aula.description}</p>
                                         </ClassHeader>
-                                        <ClassScheduled><MdOutlineDateRangeIcon /> {new Date(aula.scheduled_at).toLocaleDateString()}</ClassScheduled>
+                                        <ClassScheduled><MdOutlineDateRangeIcon />
+                                            {new Date(new Date(aula.scheduled_at).getTime() + 3 * 60 * 60 * 1000).toLocaleString('pt-BR', {
+                                                year: 'numeric',
+                                                month: 'numeric',
+                                                day: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit',
+                                            })}
+                                        </ClassScheduled>
                                         <ClassFooter>
                                             <DeleteButton onClick={() => handleOpenDeleteModal(aula)}>
                                                 <FaTrashIcon />
@@ -161,27 +156,14 @@ const ManageClasses = () => {
                             ) : (
                                 <p>Sem aulas vinculadas...</p>
                             )}
-                            {testeMobile.map((aula) => (
-                                <ClassCard>
-                                    <ClassHeader>
-                                        <h4>Matéria: {aula.title}</h4>
-                                        <p>{aula.description}</p>
-                                    </ClassHeader>
-                                    <ClassScheduled><MdOutlineDateRangeIcon /> {new Date(aula.scheduled_at).toLocaleDateString()}</ClassScheduled>
-                                    <ClassFooter>
-                                        <DeleteButton onClick={() => handleOpenDeleteModal(aula)}>
-                                            <FaTrashIcon />
-                                        </DeleteButton>
-                                        <EditButton onClick={() => handleEditClick(aula)}>
-                                            Editar <CgEditFadeIcon />
-                                        </EditButton>
-                                    </ClassFooter>
-                                </ClassCard>
-                            ))}
                         </ClassList>
                     </Container>
                 </PageContent>
             </MainContent>
+
+            {/* Modais para confirmações e ações:  
+                    Não foram inseridos em um provider global,  
+                    pois, por enquanto, são utilizados apenas neste componente. */}
             {isEditModalOpen && selectedClass && (
                 <EditClassModal
                     classData={selectedClass}

@@ -1,28 +1,39 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import Nav from '../components/nav';
 import Sidebar from '../components/sidebar';
-import { DashboardContainer } from '../styles/dashboardStyles';
+import { DashboardCard, DashboardCharts, DashboardContainer, DashboardHeader, DashboardList, DashboardListItens } from '../styles/dashboardStyles';
 import { HeaderPage, MainContent, PageContent } from '../styles/stylesGlobal';
-import { ClassCard, ClassFooter, ClassHeader, ClassList, DeleteButton, EditButton } from '../styles/manageClassesStyles';
-import { CgEditFade } from 'react-icons/cg';
-import { FaTrash } from 'react-icons/fa6';
+import { ClassFooter } from '../styles/manageClassesStyles';
+
+import { useApi } from '../hooks/useApi';
+import { ClassWithEnrollments } from '../services/types';
+import { MdOutlineDateRange } from 'react-icons/md';
+import { IoPeopleSharp } from 'react-icons/io5';
+import SimpleRadarChart from '../components/radarChart';
+import SimpleLineChart from '../components/simpleChart';
 
 const Dashboard = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const { getAll } = useApi();
+    const [classes, setClasses] = useState<ClassWithEnrollments[]>([]);
+
+    useEffect(() => {
+        const fetchClasses = async () => {
+            const data = await getAll("/instructor/dashboard/scheduled_classes");
+            if (data) {
+                setClasses(data);
+            }
+        };
+
+        fetchClasses();
+    }, []);
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
 
-    const [classes, setClasses] = useState([
-        { id: 1, title: "Matemática Avançada", date: "10/03/2025", participants: 25 },
-        { id: 2, title: "Introdução à Física", date: "15/03/2025", participants: 18 },
-        { id: 3, title: "Programação em JavaScript", date: "20/03/2025", participants: 30 }
-    ]);
-
-    const CgEditFadeIcon = CgEditFade as React.ElementType;
-    const FaTrashIcon = FaTrash as React.ElementType;
+    const MdOutlineDateRangeIcon = MdOutlineDateRange as React.ElementType;
+    const IoPeopleSharpIcon = IoPeopleSharp as React.ElementType;
 
     return (
         <DashboardContainer>
@@ -35,22 +46,45 @@ const Dashboard = () => {
                     <p>Bem-vindo ao seu painel! Aqui você pode acompanhar suas aulas agendadas e o número de alunos inscritos. Mantenha-se organizado e ofereça uma experiência incrível para seus estudantes!✨</p>
                 </HeaderPage>
                 <PageContent>
-                    {/* Inserir graficos usando recharts */}
-                    <ClassList>
-                        {classes.map((aula) => (
-                            <ClassCard key={aula.id}>
-                                <ClassHeader>
-                                    <h4>{aula.title}</h4>
-                                    <EditButton><CgEditFadeIcon /> Editar</EditButton>
-                                </ClassHeader>
-                                <p>Data: {aula.date}</p>
-                                <ClassFooter>
-                                    <span>👥 {aula.participants} participantes</span>
-                                    <DeleteButton><FaTrashIcon /> Excluir</DeleteButton>
-                                </ClassFooter>
-                            </ClassCard>
-                        ))}
-                    </ClassList>
+
+                    <DashboardList>
+                        <h3>
+                            <span style={{ color: '#2D9CDB' }}>Quantidade de Alunos por Aula</span> e 
+                            <span style={{ color: '#8884d8' }}> Evolução Mensal de Participantes/<span style={{ color: '#82ca9d' }}>aulas</span> </span>
+                        </h3>
+                        <DashboardCharts>
+                            <SimpleRadarChart classes={classes} />
+                            <SimpleLineChart classes={classes} />
+                        </DashboardCharts>
+                        <h3>Suas aulas</h3>
+                        <DashboardListItens>
+                            {classes.map((aula) => (
+                                <DashboardCard key={aula.id}>
+                                    <DashboardHeader>
+                                        <h4>{aula.title}</h4>
+                                    </DashboardHeader>
+
+                                    <ClassFooter>
+                                        <span>
+                                            <IoPeopleSharpIcon />
+                                            {aula.participants_count === 1 ? '1 Participante' : `${aula.participants_count} Participantes`}
+                                        </span>
+
+                                        <p>
+                                            <MdOutlineDateRangeIcon />
+                                            {new Date(new Date(aula.scheduled_at).getTime() + 3 * 60 * 60 * 1000).toLocaleString('pt-BR', {
+                                                year: 'numeric',
+                                                month: 'numeric',
+                                                day: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit',
+                                            })}</p>
+                                    </ClassFooter>
+                                </DashboardCard>
+                            ))}
+                        </DashboardListItens>
+
+                    </DashboardList>
                 </PageContent>
             </MainContent>
         </DashboardContainer>

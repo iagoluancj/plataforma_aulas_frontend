@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApi } from '../hooks/useApi';
 import { Button, ButtonCancel, InputGroupModal, ModalContent, ModalOverlay } from '../styles/stylesGlobal';
+import { toast } from 'react-toastify';
 
 interface CreateClassModalProps {
     onClose: () => void;
@@ -8,14 +9,14 @@ interface CreateClassModalProps {
     instructorId: string;
 }
 
+// Modal para criação das aulas
 const CreateClassModal = ({ onClose, onSave, instructorId }: CreateClassModalProps) => {
     const { create } = useApi();
-
     const [formData, setFormData] = useState({
         title: '',
         description: '',
         scheduled_at: '',
-        instructor_id: instructorId, 
+        instructor_id: instructorId,
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,10 +24,21 @@ const CreateClassModal = ({ onClose, onSave, instructorId }: CreateClassModalPro
     };
 
     const handleSubmit = async () => {
+
+        if (!formData.title || !formData.description || !formData.scheduled_at) {
+            toast.error("Por favor, preencha todos os campos.");
+            return;
+        }
+
         const newClass = await create('/classes', formData);
-        if (newClass) {
+        if (newClass.status) {
+            toast.error("Falha ao criar a aula.");
+
+        } else {
+            console.log(newClass)
             onSave(newClass);
             onClose();
+            toast.success("Aula criada com sucesso.");
         }
     };
 
@@ -36,7 +48,7 @@ const CreateClassModal = ({ onClose, onSave, instructorId }: CreateClassModalPro
                 <InputGroupModal>
                     <input name="title" value={formData.title} onChange={handleChange} placeholder="Matéria" />
                     <input name="description" value={formData.description} onChange={handleChange} placeholder="Descrição" />
-                    <input name="scheduled_at" type="date" value={formData.scheduled_at} onChange={handleChange} />
+                    <input name="scheduled_at" type="datetime-local" value={formData.scheduled_at} onChange={handleChange} />
                 </InputGroupModal>
                 <span>
                     <Button onClick={handleSubmit}>Criar</Button>
