@@ -16,6 +16,7 @@ const CreateClassModal = ({ onClose, onSave, instructorId }: CreateClassModalPro
         title: '',
         description: '',
         scheduled_at: '',
+        link_video: '',
         instructor_id: instructorId,
     });
 
@@ -35,7 +36,6 @@ const CreateClassModal = ({ onClose, onSave, instructorId }: CreateClassModalPro
             toast.error("Falha ao criar a aula.");
 
         } else {
-            console.log(newClass)
             onSave(newClass);
             onClose();
             toast.success("Aula criada com sucesso.");
@@ -48,6 +48,7 @@ const CreateClassModal = ({ onClose, onSave, instructorId }: CreateClassModalPro
                 <InputGroupModal>
                     <input name="title" value={formData.title} onChange={handleChange} placeholder="Matéria" />
                     <input name="description" value={formData.description} onChange={handleChange} placeholder="Descrição" />
+                    <input name="link_video" value={formData.link_video} onChange={handleChange} placeholder="URL da aula no Youtube" />
                     <input name="scheduled_at" type="datetime-local" value={formData.scheduled_at} onChange={handleChange} />
                 </InputGroupModal>
                 <span>

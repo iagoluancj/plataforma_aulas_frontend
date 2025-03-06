@@ -41,6 +41,8 @@ const Profile = () => {
         formData.append("email", user.email);
         formData.append("role", user.role);
 
+        console.log(user.profile_picture)
+
 
         if (selectedFile) {
             formData.append("profile_picture", selectedFile);
@@ -51,10 +53,10 @@ const Profile = () => {
 
             if (response) {
                 toast.success("Usuário atualizado com sucesso!");
-                console.log("Usuário atualizado com sucesso!", response);
+                console.log(response.profile_picture)
                 setUser({
                     ...user,
-                    profile_picture: response.response.profile_picture || user.profile_picture,
+                    profile_picture: response.profile_picture || user.profile_picture,
                 });
             }
         } catch (error) {
@@ -62,7 +64,7 @@ const Profile = () => {
             console.error("Erro ao atualizar o usuário:", error);
         }
     };
-
+    
     return (
         <ProfileContainer>
             <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />

@@ -67,7 +67,7 @@ const Dashboard = () => {
                                     <ClassFooter>
                                         <span>
                                             <IoPeopleSharpIcon />
-                                            {aula.participants_count === 1 ? '1 Participante' : `${aula.participants_count} Participantes`}
+                                            {aula.participants_count === 1 || aula.participants_count === 0 ? `${aula.participants_count} Participante` : `${aula.participants_count} Participantes`}
                                         </span>
 
                                         <p>

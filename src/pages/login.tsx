@@ -44,6 +44,7 @@ const Login = () => {
 
         try {
             const response = await loginUser(email, password);
+            console.log(response)
             if (response.access) {
                 login(response.access, {
                     id: response.user.id,
@@ -81,8 +82,8 @@ const Login = () => {
             const response = await createUser('/register/', data);
 
             if (response.status === 201) {
-                console.log("Usuário criado com sucesso!");
                 toast.success("Conta criada com sucesso!");
+                setSigninSignup(false)
             } else {
                 if (response.error && response.error.includes("Email is already in use. Please choose another one.")) {
                     toast.error("Email já está cadastrado para outro usuário.");
@@ -91,7 +92,6 @@ const Login = () => {
                 }
             }
         } catch (err: any) {
-            console.log(err)
             if (err.response && err.response.data) {
             } else {
                 toast.error("Erro ao criar conta. Falha no servidor.");

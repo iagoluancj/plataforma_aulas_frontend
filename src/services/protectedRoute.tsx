@@ -1,6 +1,8 @@
 import { Navigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
-import { JSX, useContext } from "react";
+import { JSX, useEffect, useState } from "react";
+import { DecodedToken } from "./types";
+import { jwtDecode } from "jwt-decode";
 
 interface ProtectedRouteProps {
     children: JSX.Element;
@@ -9,14 +11,30 @@ interface ProtectedRouteProps {
 
 // ProtectedRoute:
 // Controla o acesso do usuário com base na role.  
-// Atualmente, a role é obtida via session, mas futuramente será extraída do token.
 const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
     const { auth, loading } = useAuth();
-    // const { userRole } = useContext(AuthContext) || {};
+    const [userRole, setUserRole] = useState<string | null>(null);
 
-    const storedUser = sessionStorage.getItem("userData");
-    const parsedUser = storedUser ? JSON.parse(storedUser) : null;
-    const userRole = parsedUser?.role || '';
+    useEffect(() => {
+        const token = localStorage.getItem("authToken");
+
+        if (token) {
+            try {
+                const decoded: DecodedToken = jwtDecode(token);
+                const currentTime = Date.now() / 1000;
+
+                if (decoded.exp > currentTime) {
+                    setUserRole(decoded.role);
+                } else {
+                    console.warn("Token expirado");
+                    setUserRole(null);
+                }
+            } catch (error) {
+                console.error("Erro ao decodificar o token:", error);
+                setUserRole(null);
+            }
+        }
+    }, []);
 
     if (loading) {
         return <div>Carregando...</div>;
@@ -27,7 +45,6 @@ const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
     }
 
     if (!userRole) {
-        console.log(`Falha ao encontrar ${userRole}`)
         return <div>Verificando permissões...</div>;
     }
 

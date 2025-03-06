@@ -13,7 +13,7 @@ export const AvailableClassesContainer = styled.div`
 export const AvailableClassList = styled.div`
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: start;
   justify-content: center;
   gap: 20px;
 `;
@@ -21,6 +21,7 @@ export const AvailableClassList = styled.div`
 export const AvailableClassCard = styled.div`
   position: relative;
   background: #f5f5f5;
+  padding: .5rem;
   padding-bottom: 8px;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
   border-radius: ${({ theme }) => theme.borderRadius};
@@ -101,14 +102,22 @@ export const AvailableClassFooter = styled.footer`
   span {
     display: flex;
     align-items: center;
+    font-size: 14px;
     gap: 5px;
   }
 `;
-
 
 export const AvailableClassInstructor = styled.span`
    max-width: 100px;
    white-space: nowrap; 
    overflow: hidden;
 
+`;
+
+export const AvailableLine = styled.div`
+   width: 100%;
+   height: 2px;
+   border-radius: 50%;
+   background-color: ${({ theme }) => theme.colors.primary};
+   margin: .5rem 0rem .1rem 0rem;
 `;

@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-import { ClassContext, mockClasses } from "../store/classesContext";
-import { AvailableClassesContainer, AvailableClassCard, AvailableClassHeader, AvailableClassList, AvailableClassWrapper, AvailableClassDescription, AvailableClassFooter, SubscribeButton, AvailableClassInstructor } from "../styles/availableClassesStyles";
+import { ClassContext } from "../store/classesContext";
+import { AvailableClassesContainer, AvailableClassCard, AvailableClassHeader, AvailableClassList, AvailableClassWrapper, AvailableClassDescription, AvailableClassFooter, SubscribeButton, AvailableClassInstructor, AvailableLine } from "../styles/availableClassesStyles";
 import { Header, HeaderPage, MainContent, PageContent } from "../styles/stylesGlobal";
 import Sidebar from "../components/sidebar";
 import Nav from "../components/nav";
@@ -11,6 +11,7 @@ import { Class, Enrollments } from "../services/types";
 import { useApi } from "../hooks/useApi";
 import { ContainerFilters, Filters } from "../styles/manageClassesStyles";
 import { toast } from "react-toastify";
+import ReactPlayer from "react-player";
 
 
 const AvailableClasses = () => {
@@ -18,7 +19,7 @@ const AvailableClasses = () => {
     const MdOutlineDateRangeIcon = MdOutlineDateRange as React.ElementType;
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [classes, setClasses] = useState<Class[]>(mockClasses || []);
+    const [classes, setClasses] = useState<Class[]>([]);
     const [enrollments, setEnrollments] = useState<Enrollments[]>([]);
 
     const storedUser = sessionStorage.getItem("userData");
@@ -26,7 +27,7 @@ const AvailableClasses = () => {
     const studentId = parsedUser?.id || '';
 
     const context = useContext(ClassContext);
-    const { create, remove } = useApi()
+    const { create, remove, getAll, getByParams } = useApi()
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
@@ -64,11 +65,29 @@ const AvailableClasses = () => {
     };
 
     useEffect(() => {
-        setEnrollments(context?.enrollments || []);
-        setClasses(context?.classState || []);
-    }, [context?.classState, context?.enrollments]);
+        const fetchDataIfNeeded = async () => {
+            if (!context?.classState?.length) {
+                const classes = await getAll("classes");
+                console.log(classes)
+                setClasses(classes);
+            } else {
+                setClasses(context.classState);
+            }
+
+            if (!context?.enrollments?.length) {
+                const enrollments = await getByParams("enrollments", { student: studentId });
+                setEnrollments(enrollments);
+            } else {
+                setEnrollments(context.enrollments);
+            }
+        };
+
+        fetchDataIfNeeded();
+    }, []);
+
 
     if (!context) return <p>Erro ao carregar as aulas.</p>;
+
 
     return (
         <AvailableClassesContainer>
@@ -129,6 +148,20 @@ const AvailableClasses = () => {
                                                 })}
                                             </span>
                                         </AvailableClassFooter>
+                                        {enrollments.some(enrollment => enrollment.classes === aula.id) ? (
+                                            <>
+                                                <AvailableLine></AvailableLine>
+                                                <ReactPlayer
+                                                    url={aula.link_video ? aula.link_video : 'https://www.youtube.com/watch?v=d7HeCDB9OPE'}
+                                                    width="100%"
+                                                    height="250px"
+                                                    controls
+                                                />
+                                            </>
+                                        ) : (
+                                            <>
+                                            </>
+                                        )}
                                     </AvailableClassCard>
                                 ))
                             ) : (

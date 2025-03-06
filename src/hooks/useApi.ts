@@ -63,7 +63,12 @@ export const useApi = () => {
   const getByParams = async (endpoint: string, params: object) => {
     try {
       const urlToFetch = `${endpoint}/?${new URLSearchParams(params as any).toString()}`;
-      const response = await api.get(urlToFetch);
+      const response = await api.get(urlToFetch, {
+        headers: {
+          Authorization: token ? `Bearer ${token}` : "",
+          'Content-Type': 'application/json',
+        },
+      });
       return response.data;
     } catch (error) {
       return null;
@@ -85,7 +90,6 @@ export const useApi = () => {
         ...customHeaders,
       };
 
-      console.log(headers)
       const response = await api.put(`${endpoint}/${id}/`, data, { headers });
 
       return response.data;

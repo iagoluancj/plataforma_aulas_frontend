@@ -5,6 +5,7 @@ export interface Class {
     scheduled_at: string;
     instructor_id: string;
     instructor_name: string;
+    link_video: string;
 }
 
 export interface EditClassModalProps {
@@ -41,7 +42,6 @@ export interface ClassContextType {
 export interface AuthContextType {
     auth: boolean;
     user: { id: string; email: string; profile_picture: string } | null;
-    userRole: string | null;
     login: (token: string, user: any) => void;
     logout: () => void;
     loading: boolean;
@@ -51,4 +51,10 @@ export interface NavProps {
   title: string;
   isOpen: boolean;
   toggleSidebar: () => void;
+}
+
+export interface DecodedToken {
+  role: string;
+  exp: number;
+  [key: string]: any; 
 }

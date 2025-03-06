@@ -103,6 +103,11 @@ export const ClassHeader = styled.div`
         overflow: hidden;
         overflow-y: auto;
     }
+
+    span {
+      font-weight: 400;
+      font-size: 14px;
+    }
 `;
 
 export const ClassScheduled = styled.div`

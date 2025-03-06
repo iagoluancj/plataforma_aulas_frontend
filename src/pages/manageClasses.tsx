@@ -5,12 +5,13 @@ import { HeaderPage, MainContent, PageContent } from '../styles/stylesGlobal';
 import { ClassCard, ClassFooter, ClassHeader, ClassList, ClassScheduled, Container, ContainerFilters, CreateClass, DeleteButton, EditButton, Filters, Header, ManageClassesContainer } from '../styles/manageClassesStyles';
 import { FaPlus, FaTrash } from 'react-icons/fa6';
 import { CgEditFade } from 'react-icons/cg';
-import { ClassContext, mockClasses } from '../store/classesContext';
+import { ClassContext } from '../store/classesContext';
 import { Class } from '../services/types';
 import { MdOutlineDateRange } from 'react-icons/md';
 import EditClassModal from '../components/editModa';
 import DeleteClassModal from '../components/deleteModal';
 import CreateClassModal from '../components/createModal';
+import { useApi } from '../hooks/useApi';
 
 
 const ManageClasses = () => {
@@ -32,8 +33,9 @@ const ManageClasses = () => {
 
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [classFiltered, setClassFiltered] = useState<Class[]>(mockClasses || []);
+    const [classFiltered, setClassFiltered] = useState<Class[]>([]);
     const context = useContext(ClassContext);
+    const { getByParams } = useApi();
 
     const storedUser = sessionStorage.getItem("userData");
     const parsedUser = storedUser ? JSON.parse(storedUser) : null;
@@ -65,7 +67,6 @@ const ManageClasses = () => {
     const handleOpenDeleteModal = (aula: Class) => {
         setSelectedDeleteClass(aula);
         setIsDeleteModalOpen(true);
-        console.log(isDeleteModalOpen)
     };
 
     const handleDelete = (deletedId: string) => {
@@ -88,13 +89,16 @@ const ManageClasses = () => {
     // Foi necessário utilizar o operador '?' em classState  
     // para evitar erros caso o contexto ainda não tenha sido carregado.
     useEffect(() => {
-        if (context?.classState?.length) {
-            const filteredClasses = context.classState.filter((classItem: Class) =>
-                classItem.instructor_id === instructor_id_cache
-            );
-            setClassFiltered(filteredClasses);
-        }
-    }, [context?.classState]);
+        const fetchClasses = async () => {
+            const classes = await getByParams("classes", { instructor_id: instructor_id_cache });
+            console.log("Classes fetched:", classes);
+            setClassFiltered(classes);
+        };
+
+        fetchClasses();
+    }, []);
+
+
 
     if (!context) return <p>Erro ao carregar as aulas.</p>;
 
@@ -129,9 +133,9 @@ const ManageClasses = () => {
                         <ClassList>
                             {classFiltered.length > 0 ? (
                                 classFiltered.map((aula) => (
-                                    <ClassCard>
+                                    <ClassCard key={aula.id}>
                                         <ClassHeader>
-                                            <h4>Matéria: {aula.title}</h4>
+                                            <h4> <span>Matéria: </span>{aula.title}</h4>
                                             <p>{aula.description}</p>
                                         </ClassHeader>
                                         <ClassScheduled><MdOutlineDateRangeIcon />
@@ -154,7 +158,7 @@ const ManageClasses = () => {
                                     </ClassCard>
                                 ))
                             ) : (
-                                <p>Sem aulas vinculadas...</p>
+                                <p>Sem aulas criadas...</p>
                             )}
                         </ClassList>
                     </Container>
