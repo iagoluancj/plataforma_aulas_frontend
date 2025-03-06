@@ -1,46 +1,119 @@
-# Getting Started with Create React App
+# Plataforma Aulas - Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Este é o repositório do Frontend da **Plataforma de Aulas**, uma aplicação para gestão de aulas online.  
+A aplicação foi desenvolvida em **React** com **TypeScript** e utiliza **Styled Components** para a estilização, além de Context API para gerenciamento global do estado.
 
-## Available Scripts
+## Sumário
 
-In the project directory, you can run:
+- [Instalação](#instalação)
+- [Configuração](#configuração)
+- [Como Executar](#como-executar)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Funcionalidades Implementadas](#funcionalidades-implementadas)
+- [Funcionalidades Extras](#funcionalidades-extras)
+- [Considerações Finais](#considerações-finais)
 
-### `npm start`
+## Instalação
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+1. **Clone o repositório, acesse-o e instale as dependências:**
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+   ```bash
+    git clone https://github.com/iagoluancj/plataforma_aulas_frontend.git
+   ```
 
-### `npm test`
+    ```bash
+    cd plataforma_aulas/frontend
+    ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    ```bash
+    npm install
+    ```
+## Configuração
 
-### `npm run build`
+- **Node.js:** Certifique-se de ter o Node.js instalado(versão recomendada >= 14.x).
+- **Variáveis de Ambiente:** Se necessário, altere o API_URL presente no arquivo api.ts em src/api e configure a URL de acordo com seu localhost do backend. Exemplo:
+    ```bash
+    const API_URL = "http://127.0.0.1:8000/api";
+    ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Como Executar
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Para iniciar o frontend, execute: 
+  ```bash
+      npm start
+  ```
+A aplicação será iniciada em *http://localhost:3000*
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Estrutura do Projeto
 
-### `npm run eject`
+A estrutura do projeto frontend está organizada da seguinte forma: 
+```bash
+  frontend/
+    └── src/
+    ├── api/                
+    │   ├── api.ts               # Funções genéricas para comunicação com a API
+    │   └── auth.ts              # Serviços de autenticação (login, logout, etc.)
+    │   
+    ├── assets/               # Arquivos estáticos, como imagens e fontes
+    │
+    ├── components/           # Componentes reutilizáveis da interface (Botões, Nav, Sidebar, etc.)
+    │   ├── Button.tsx         
+    │   ├── createModal.tsx    
+    │   ├── deleteModal.tsx    
+    │   ├── editModal.tsx      
+    │   ├── nav.tsx            
+    │   ├── radarChart.tsx     
+    │   ├── sidebar.tsx        
+    │   └── simpleChart.tsx    
+    │
+    ├── hooks/                # Custom Hooks para lógica compartilhada (ex.: useAuth, useApi, useDecodedToken)
+    │   ├── useApi.ts          
+    │   ├── useAuth.ts         
+    │   └── useDecodedToken.ts 
+    │
+    ├── pages/                # Páginas da aplicação (Login, Dashboard, ManageClasses, AvailableClasses, Profile, etc.)
+    │   ├── availableClasses.tsx
+    │   ├── Dashboard.tsx      
+    │   ├── login.tsx          
+    │   ├── manageClasses.tsx  
+    │   └── profile.tsx        
+    │
+    ├── routes/               # Configuração das rotas da aplicação (ex.: appRoutes.tsx)
+    │   └── appRoutes.tsx      
+    │
+    ├── store/                # Gerenciamento de estado com Context API (ex.: authContext, classesContext)
+    │   ├── authContext.tsx    
+    │   └── classesContext.tsx 
+    │
+    └── styles/               # Estilos globais e temas (ex.: theme, configGlobal) utilizando Styled Components
+        └── [arquivos de estilo]  
+        
+    ├── index.tsx             # Ponto de entrada da aplicação React
+    └── App.tsx               # Componente principal do aplicativo
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Funcionalidades Implementadas
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Autenticação:** Tela de login funcional com integração via JWT. Além disso, foi implementado o fluxo de cadastro para novos usuários.  
+- **Layout Responsivo:** Construção da interface responsiva utilizando Styled Components, garantindo uma experiência fluida em diferentes dispositivos. A estrutura inclui Sidebar, Nav e um layout padrão.  
+  - **Mobile First:** O design prioriza dispositivos móveis, garantindo navegação intuitiva e otimizada antes da adaptação para telas maiores.  
+- **Gerenciamento de Aulas:**  
+  - Instrutores podem criar e gerenciar aulas, definindo detalhes como título, descrição e link do vídeo.  
+  - Alunos visualizam e acessam aulas disponíveis, que são exibidas conforme a inscrição na plataforma.  
+  - As aulas vinculadas ao YouTube são reproduzidas diretamente na **plataforma_aulas**.  
+- **Perfil do Usuário:** Tela para visualização e edição de informações pessoais.  
+- **Dashboard do Instrutor:** Painel com visão geral das aulas agendadas, número de alunos inscritos e gráficos interativos para análise de engajamento.  
+- **Context API:** Utilização do Context API para gerenciamento global de estados, facilitando a atualização e o compartilhamento de informações, como aulas disponíveis.  
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Funcionalidades Extras
 
-## Learn More
+- **Sistema de Design com Tema Global:** Uso de Styled Components para definir um tema (cores, espaçamentos, fontes) e aplicação de estilos globais.
+- **Integração de bibliotecas:** Usei variadas bibliotecas (ex.: react-icons, react-player, react-toastify, recharts e outras) para uma interface visualmente atrativa ao usuário.
+- **Roteamento Protegido:** Implementação de rotas protegidas com base no estado de autenticação.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Considerações Finais
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **Backend:** Desenvolvido em Django + SQL Server, com APIs CRUD e autenticação JWT.
+- **Frontend:** Desenvolvido em React + TypeScript, com integração via Context API e Styled Components.
+- **Documentação:** As instruções de instalação, configuração e execução estão detalhadas neste README.
