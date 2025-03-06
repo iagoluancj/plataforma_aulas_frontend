@@ -2,7 +2,7 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import Login from "../pages/login";
 import ProtectedRoute from "../services/protectedRoute";
-import Dashboard from "../pages/Dashboard";
+import Dashboard from "../pages/dashboard";
 import ManageClasses from "../pages/manageClasses";
 import AvailableClasses from "../pages/availableClasses";
 import Profile from "../pages/profile";

@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { Title } from "./stylesGlobal";
 
 export const NavBar = styled.nav`
   width: 100%;

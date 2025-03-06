@@ -21,6 +21,8 @@ const AvailableClasses = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [classes, setClasses] = useState<Class[]>([]);
     const [enrollments, setEnrollments] = useState<Enrollments[]>([]);
+    const [loadingEnrollments, setLoadingEnrollments] = useState(true);
+
 
     const storedUser = sessionStorage.getItem("userData");
     const parsedUser = storedUser ? JSON.parse(storedUser) : null;
@@ -68,18 +70,14 @@ const AvailableClasses = () => {
         const fetchDataIfNeeded = async () => {
             if (!context?.classState?.length) {
                 const classes = await getAll("classes");
-                console.log(classes)
                 setClasses(classes);
             } else {
                 setClasses(context.classState);
             }
 
-            if (!context?.enrollments?.length) {
-                const enrollments = await getByParams("enrollments", { student: studentId });
-                setEnrollments(enrollments);
-            } else {
-                setEnrollments(context.enrollments);
-            }
+            const enrollments = await getByParams("enrollments", { student: studentId });
+            setEnrollments(enrollments);
+
         };
 
         fetchDataIfNeeded();
@@ -120,7 +118,7 @@ const AvailableClasses = () => {
                                     <AvailableClassCard key={aula.id}>
                                         <AvailableClassHeader>
                                             <SubscribeButton
-                                                isSubscribed={enrollments.some(enrollment => enrollment.classes === aula.id)}
+                                                $isSubscribed={enrollments.some(enrollment => enrollment.classes === aula.id)}
                                                 onClick={() => {
                                                     const isSubscribed = enrollments.some(enrollment => enrollment.classes === aula.id);
                                                     isSubscribed ? handleUnsubscribe(aula.id) : handleSubscribe(aula.id);

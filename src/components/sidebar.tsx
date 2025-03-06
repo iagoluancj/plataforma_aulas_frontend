@@ -55,7 +55,7 @@ const Sidebar = ({ isOpen, toggleSidebar }: SideBarProps) => {
 
   return (
     <>
-      <Overlay isOpen={isOpen} onClick={toggleSidebar} />
+      <Overlay $isOpen={isOpen} onClick={toggleSidebar} />
       <SideBar className={isOpen ? "open" : ""}>
         <aside>
           <Header>

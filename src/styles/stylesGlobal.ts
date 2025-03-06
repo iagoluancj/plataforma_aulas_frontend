@@ -3,7 +3,7 @@ import styled from "styled-components";
 // Estilos globais:
 // Estes estilos são utilizados ativamente em diversos componentes da aplicação.
 interface OverlayProps {
-  isOpen: boolean;
+  $isOpen: boolean;
 }
 
 export const Title = styled.h2`
@@ -279,7 +279,7 @@ export const IconButtonGear = styled(IconButton)`
 
 
 export const Overlay = styled.div<OverlayProps>`
-  display: ${({ isOpen }) => (isOpen ? "block" : "none")};
+  display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
 
   @media (max-width: 768px) {
     position: fixed;

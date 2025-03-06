@@ -32,6 +32,12 @@ const CreateClassModal = ({ onClose, onSave, instructorId }: CreateClassModalPro
         }
 
         const newClass = await create('/classes', formData);
+
+        if (JSON.stringify(newClass).includes("Enter a valid URL")) {
+            toast.error("Link inválido da aula no YouTube. Crie sem ou revise seu link.");
+            return;
+        }
+        
         if (newClass.status) {
             toast.error("Falha ao criar a aula.");
 

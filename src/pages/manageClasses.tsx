@@ -8,7 +8,7 @@ import { CgEditFade } from 'react-icons/cg';
 import { ClassContext } from '../store/classesContext';
 import { Class } from '../services/types';
 import { MdOutlineDateRange } from 'react-icons/md';
-import EditClassModal from '../components/editModa';
+import EditClassModal from '../components/editModal';
 import DeleteClassModal from '../components/deleteModal';
 import CreateClassModal from '../components/createModal';
 import { useApi } from '../hooks/useApi';
@@ -91,7 +91,6 @@ const ManageClasses = () => {
     useEffect(() => {
         const fetchClasses = async () => {
             const classes = await getByParams("classes", { instructor_id: instructor_id_cache });
-            console.log("Classes fetched:", classes);
             setClassFiltered(classes);
         };
 

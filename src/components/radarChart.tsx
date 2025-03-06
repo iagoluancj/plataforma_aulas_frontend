@@ -6,45 +6,6 @@ interface SimpleRadarChartProps {
     classes: ClassWithEnrollments[];
 }
 
-const dataTeste = [
-    {
-        title: 'Math',
-        participants_count: 1,
-        B: 110,
-        fullMark: 2,
-    },
-    {
-        title: 'Chinese',
-        participants_count: 2,
-        B: 130,
-        fullMark: 3,
-    },
-    {
-        title: 'English',
-        participants_count: 2,
-        B: 130,
-        fullMark: 3,
-    },
-    {
-        title: 'Geography',
-        participants_count: 3,
-        B: 100,
-        fullMark: 3,
-    },
-    {
-        title: 'Physics',
-        participants_count: 2,
-        B: 90,
-        fullMark: 3,
-    },
-    {
-        title: 'History',
-        participants_count: 2,
-        B: 85,
-        fullMark: 3,
-    },
-];
-
 const SimpleRadarChart: React.FC<SimpleRadarChartProps> = ({ classes }) => {
     const data = classes.map((aula) => ({
         subject: aula.title,
@@ -52,7 +13,6 @@ const SimpleRadarChart: React.FC<SimpleRadarChartProps> = ({ classes }) => {
         fullMark: Math.max(...classes.map((aula) => aula.participants_count)) || 100,
     }));
 
-    console.log(data)
 
     return (
         <ResponsiveContainer width={400} height={300}>

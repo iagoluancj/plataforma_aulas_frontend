@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 interface SubscribeProps {
-  isSubscribed: boolean;
+  $isSubscribed: boolean;
 }
 
 export const AvailableClassesContainer = styled.div`
@@ -35,7 +35,7 @@ export const SubscribeButton = styled.button<SubscribeProps>`
   position: absolute;
   top: -10px; 
   right: -10px; 
-  background-color: ${({ theme, isSubscribed }) => (isSubscribed ? theme.colors.primary : theme.colors.success)};
+  background-color: ${({ theme, $isSubscribed }) => ($isSubscribed ? theme.colors.primary : theme.colors.success)};
 
   color: ${({ theme }) => theme.colors.white};
   border: none;
@@ -52,7 +52,7 @@ export const SubscribeButton = styled.button<SubscribeProps>`
   }
 
   &:hover {
-    background-color:${({ theme, isSubscribed }) => (isSubscribed ? '#2588B8' : '#218838')};
+    background-color:${({ theme, $isSubscribed }) => ($isSubscribed ? '#2588B8' : '#218838')};
   }
 `;
 

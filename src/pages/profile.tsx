@@ -41,9 +41,6 @@ const Profile = () => {
         formData.append("email", user.email);
         formData.append("role", user.role);
 
-        console.log(user.profile_picture)
-
-
         if (selectedFile) {
             formData.append("profile_picture", selectedFile);
         }
@@ -53,7 +50,6 @@ const Profile = () => {
 
             if (response) {
                 toast.success("Usuário atualizado com sucesso!");
-                console.log(response.profile_picture)
                 setUser({
                     ...user,
                     profile_picture: response.profile_picture || user.profile_picture,

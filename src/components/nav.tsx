@@ -17,21 +17,16 @@ const Nav = ({ title, toggleSidebar, isOpen }: NavProps) => {
 
   const { logout } = useAuth()
 
-  const handleLogout = () => {
-    logout(); 
-
-};
-
   return (
     <NavBar>
       <NavTitle>{title}</NavTitle>
       <NavActions>
-        <SearchContainer> 
-          <SearchInput type="text" placeholder="Buscar aulas..." /> 
+        <SearchContainer>
+          <SearchInput type="text" placeholder="Buscar aulas..." />
           {/* Aqui será um link com a pagina 'aulas disponiveis, onde ao pesquisar, levará o usuario até a pagina e mostrará de acordo com sua pesquisa' */}
           <TbFlagSearchIcon />
         </SearchContainer>
-        <IconButton onClick={(() => handleLogout())}>
+        <IconButton onClick={(() => logout())}>
           <FiLogOutIcon />
         </IconButton>
         <IconButtonGear onClick={toggleSidebar}>

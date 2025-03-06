@@ -44,7 +44,6 @@ const Login = () => {
 
         try {
             const response = await loginUser(email, password);
-            console.log(response)
             if (response.access) {
                 login(response.access, {
                     id: response.user.id,
@@ -81,7 +80,7 @@ const Login = () => {
         try {
             const response = await createUser('/register/', data);
 
-            if (response.status === 201) {
+            if (response.message.includes('User created successfully')) {
                 toast.success("Conta criada com sucesso!");
                 setSigninSignup(false)
             } else {
@@ -97,6 +96,7 @@ const Login = () => {
                 toast.error("Erro ao criar conta. Falha no servidor.");
             }
         }
+
         finally {
             setLoading(false);
         }
