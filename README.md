@@ -2,6 +2,7 @@
 
 Este é o repositório do Frontend da **Plataforma de Aulas**, uma aplicação para gestão de aulas online.  
 A aplicação foi desenvolvida em **React** com **TypeScript** e utiliza **Styled Components** para a estilização, além de Context API para gerenciamento global do estado.
+> ### [Documentação do Back-end](https://github.com/iagoluancj/plataforma_aulas_backend)
 
 ## Sumário
 
